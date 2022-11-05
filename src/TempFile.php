@@ -122,13 +122,11 @@ final class TempFile extends \SplFileInfo
         return $this;
     }
 
-    public function delete(): self
+    public function delete(): void
     {
         if (\file_exists($this)) {
             \unlink($this);
         }
-
-        return $this;
     }
 
     private static function tempFile(): string
