@@ -1,0 +1,33 @@
+{
+    "name": "zenstruck/temp-file",
+    "description": "Temporary file wrapper.",
+    "homepage": "https://github.com/zenstruck/temp-file",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [],
+    "authors": [
+        {
+            "name": "Kevin Bond",
+            "email": "kevinbond@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.4",
+        "phpunit/phpunit": "^9.5.0",
+        "symfony/phpunit-bridge": "^6.1",
+        "symfony/var-dumper": "^5.4|^6.0"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": { "Zenstruck\\": ["src/"] }
+    },
+    "autoload-dev": {
+        "psr-4": { "Zenstruck\\Tests\\": ["tests/"] }
+    }
+}
