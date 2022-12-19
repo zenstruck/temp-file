@@ -49,7 +49,7 @@ $image = TempFile::image(type: 'gif'); // customize the image type
 
 $file->contents(); // string - the file's contents
 $file->refresh(); // self - clearstatcache() on the file (refreshes metadata)
-$file->delete(); // void - delete the file
+$file->delete(); // self - delete the file
 
 // is instance of \SplFileInfo
 $file->getMTime(); // int - last modified timestamp
