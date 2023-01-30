@@ -8,7 +8,7 @@ Temporary file wrapper. Created files are deleted at the end of the script.
 ## Installation
 
 ```bash
-composer require zenstruck/stream
+composer require zenstruck/temp-file
 ```
 
 ## API
@@ -76,6 +76,7 @@ To use, register the service:
 ```yaml
 # config/packages/zenstruck_temp_file.yaml
 
-Zenstruck\TempFile\Bridge\Symfony\PurgeTempFiles:
-    tags: [kernel.reset]
+services:
+    Zenstruck\TempFile\Bridge\Symfony\PurgeTempFiles:
+        autoconfigure: true
 ```
