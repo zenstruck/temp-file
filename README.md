@@ -24,6 +24,12 @@ $file = TempFile::new();
 // create empty file with random filename, with extension (in /tmp)
 $file = TempFile::withExtension('txt');
 
+// create file with specific filename (in /tmp)
+$file = TempFile::withName('my-file.txt'); // creates empty file
+$file = TempFile::withName('my-file.txt', 'some content'); // creates file with string content
+$file = TempFile::withName('my-file.txt', \fopen('some/file.txt', 'r')); // creates file with resource as content
+$file = TempFile::withName('my-file.txt', new \SplFileInfo('some/file.txt')); // creates file from existing file (existing file is copied)
+
 // create for existing file
 $file = TempFile::new('some/file.txt'); // note: will be deleted at the end of the script
 
@@ -40,6 +46,7 @@ $file = TempFile::for(new \SplFileInfo('some/file.txt'));
 $image = TempFile::image(); // temporary 10x10 image with 'jpg' as the extension
 $image = TempFile::image(100, 50); // customize the dimensions
 $image = TempFile::image(type: 'gif'); // customize the image type
+$image = TempFile::image(name: 'my-image.png'); // customize the file name
 ```
 
 ### Using `TempFile`'s

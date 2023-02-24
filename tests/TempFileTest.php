@@ -201,10 +201,103 @@ final class TempFileTest extends TestCase
     /**
      * @test
      */
+    public function can_create_image_with_name(): void
+    {
+        $imageSize = \getimagesize($file = TempFile::image(5, 6, name: 'some-image.png'));
+
+        $this->assertFileExists($file);
+        $this->assertSame(\sys_get_temp_dir().'/some-image.png', (string) $file);
+        $this->assertSame(5, $imageSize[0]);
+        $this->assertSame(6, $imageSize[1]);
+        $this->assertSame('image/png', $imageSize['mime']);
+        $this->assertSame('png', $file->getExtension());
+    }
+
+    /**
+     * @test
+     */
+    public function image_name_requires_extension(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TempFile::image(name: 'some-image');
+    }
+
+    /**
+     * @test
+     */
+    public function image_name_cannot_contain_directory_separator(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TempFile::image(name: 'some/dir/image.png');
+    }
+
+    /**
+     * @test
+     */
     public function cannot_create_image_for_invalid_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         TempFile::image(type: 'invalid');
+    }
+
+    /**
+     * @test
+     */
+    public function can_create_named_temp_file(): void
+    {
+        $file = TempFile::withName('some-file.txt');
+
+        $this->assertFileExists($file);
+        $this->assertSame(\sys_get_temp_dir().'/some-file.txt', (string) $file);
+        $this->assertSame('', \file_get_contents($file));
+
+        TempFile::purge();
+
+        $this->assertFileDoesNotExist($file);
+    }
+
+    /**
+     * @test
+     */
+    public function can_create_named_temp_file_with_string_content(): void
+    {
+        $file = TempFile::withName('some-file.txt', 'content');
+
+        $this->assertFileExists($file);
+        $this->assertSame(\sys_get_temp_dir().'/some-file.txt', (string) $file);
+        $this->assertSame('content', \file_get_contents($file));
+
+        TempFile::purge();
+
+        $this->assertFileDoesNotExist($file);
+    }
+
+    /**
+     * @test
+     */
+    public function can_create_named_temp_file_with_spl_file(): void
+    {
+        $file = TempFile::withName('some-file.txt', new \SplFileInfo(__FILE__));
+
+        $this->assertFileExists($file);
+        $this->assertSame(\sys_get_temp_dir().'/some-file.txt', (string) $file);
+        $this->assertFileEquals($file, __FILE__);
+
+        TempFile::purge();
+
+        $this->assertFileDoesNotExist($file);
+    }
+
+    /**
+     * @test
+     */
+    public function name_cannot_contain_directory_separator(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        TempFile::withName('some/dir/some-file.txt');
     }
 }
