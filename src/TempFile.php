@@ -42,6 +42,31 @@ final class TempFile extends \SplFileInfo
         return new self($filename);
     }
 
+    /**
+     * @param string                            $name    Name for the file (must contain no directory separators)
+     * @param string|resource|\SplFileInfo|null $content
+     */
+    public static function withName(string $name, mixed $content = null): self
+    {
+        if (\str_contains($name, '/')) {
+            throw new \InvalidArgumentException('File name cannot contain directory separator.');
+        }
+
+        $filename = \sprintf('%s/%s', \sys_get_temp_dir(), $name);
+
+        if ($content instanceof \SplFileInfo) {
+            @\copy($content, $filename) ?: throw new \RuntimeException('Unable to copy file.');
+
+            return new self($filename);
+        }
+
+        if (false === @\file_put_contents($filename, $content ?? '')) {
+            throw new \RuntimeException('Unable to write to file.');
+        }
+
+        return new self($filename);
+    }
+
     public static function withExtension(string $extension): self
     {
         $original = self::tempFile();
@@ -78,10 +103,14 @@ final class TempFile extends \SplFileInfo
      *
      * @source https://github.com/laravel/framework/blob/183d38f18c0ea9fe13b6d10a6d8360be881d096c/src/Illuminate/Http/Testing/FileFactory.php#L68
      */
-    public static function image(int $width = 10, int $height = 10, string $type = 'jpg'): self
+    public static function image(int $width = 10, int $height = 10, string $type = 'jpg', ?string $name = null): self
     {
+        if ($name) {
+            $type = \pathinfo($name, \PATHINFO_EXTENSION) ?: throw new \InvalidArgumentException('File name must include an extension.');
+        }
+
         $type = \mb_strtolower($type);
-        $file = self::withExtension($type);
+        $file = $name ? self::withName($name) : self::withExtension($type);
 
         if (false === $image = @\imagecreatetruecolor($width, $height)) {
             throw new \RuntimeException('Error creating temporary image.');
