@@ -56,6 +56,7 @@ final class TempFile extends \SplFileInfo
 
         if ($content instanceof \SplFileInfo) {
             @\copy($content, $filename) ?: throw new \RuntimeException('Unable to copy file.');
+            @\chmod($filename, 0664);
 
             return new self($filename);
         }
@@ -63,6 +64,8 @@ final class TempFile extends \SplFileInfo
         if (false === @\file_put_contents($filename, $content ?? '')) {
             throw new \RuntimeException('Unable to write to file.');
         }
+
+        @\chmod($filename, 0664);
 
         return new self($filename);
     }
@@ -130,6 +133,8 @@ final class TempFile extends \SplFileInfo
             throw new \RuntimeException('Error creating temporary image.');
         }
 
+        @\chmod($file, 0664);
+
         return $file->refresh();
     }
 
@@ -174,6 +179,8 @@ final class TempFile extends \SplFileInfo
         if (false === $filename = @\tempnam(\sys_get_temp_dir(), 'zstf_')) {
             throw new \RuntimeException('Failed to create temporary file.');
         }
+
+        @\chmod($filename, 0664);
 
         return $filename;
     }

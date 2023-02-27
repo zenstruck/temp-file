@@ -41,6 +41,7 @@ final class TempFileTest extends TestCase
         $file = TempFile::for(new \SplFileInfo(__FILE__));
 
         $this->assertSame(\file_get_contents(__FILE__), $file->contents());
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -53,6 +54,7 @@ final class TempFileTest extends TestCase
         $this->assertFileExists($file);
         $this->assertStringEndsWith('.gif', (string) $file);
         $this->assertFileDoesNotExist(\mb_substr($file, 0, -4));
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -60,7 +62,8 @@ final class TempFileTest extends TestCase
      */
     public function exists_when_created(): void
     {
-        $this->assertFileExists(new TempFile());
+        $this->assertFileExists($file = new TempFile());
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -103,6 +106,7 @@ final class TempFileTest extends TestCase
 
         $this->assertFileExists($file);
         $this->assertStringEqualsFile($file, 'file contents');
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -114,6 +118,7 @@ final class TempFileTest extends TestCase
 
         $this->assertFileExists($file);
         $this->assertStringEqualsFile($file, 'file contents');
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -159,6 +164,7 @@ final class TempFileTest extends TestCase
         $this->assertSame(10, $imageSize[1]);
         $this->assertSame('image/jpeg', $imageSize['mime']);
         $this->assertSame('jpg', $file->getExtension());
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -173,6 +179,7 @@ final class TempFileTest extends TestCase
         $this->assertSame(10, $imageSize[1]);
         $this->assertSame($expectedMime, $imageSize['mime']);
         $this->assertSame($type, $file->getExtension());
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     public static function imageTypeProvider(): iterable
@@ -196,6 +203,7 @@ final class TempFileTest extends TestCase
         $this->assertSame(6, $imageSize[1]);
         $this->assertSame('image/png', $imageSize['mime']);
         $this->assertSame('png', $file->getExtension());
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -211,6 +219,7 @@ final class TempFileTest extends TestCase
         $this->assertSame(6, $imageSize[1]);
         $this->assertSame('image/png', $imageSize['mime']);
         $this->assertSame('png', $file->getExtension());
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
     }
 
     /**
@@ -253,6 +262,7 @@ final class TempFileTest extends TestCase
         $this->assertFileExists($file);
         $this->assertSame(\sys_get_temp_dir().'/some-file.txt', (string) $file);
         $this->assertSame('', \file_get_contents($file));
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
 
         TempFile::purge();
 
@@ -269,6 +279,7 @@ final class TempFileTest extends TestCase
         $this->assertFileExists($file);
         $this->assertSame(\sys_get_temp_dir().'/some-file.txt', (string) $file);
         $this->assertSame('content', \file_get_contents($file));
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
 
         TempFile::purge();
 
@@ -285,6 +296,7 @@ final class TempFileTest extends TestCase
         $this->assertFileExists($file);
         $this->assertSame(\sys_get_temp_dir().'/some-file.txt', (string) $file);
         $this->assertFileEquals($file, __FILE__);
+        $this->assertSame('0664', \mb_substr(\sprintf('%o', \fileperms($file)), -4));
 
         TempFile::purge();
 
