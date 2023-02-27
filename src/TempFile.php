@@ -175,6 +175,8 @@ final class TempFile extends \SplFileInfo
             throw new \RuntimeException('Failed to create temporary file.');
         }
 
+        @\chmod($filename, 0664);
+
         return $filename;
     }
 }
