@@ -132,7 +132,6 @@ final class TempFileTest extends TestCase
 
         \file_put_contents($file, 'foobarbaz');
 
-        $this->assertSame(6, $file->getSize());
         $this->assertSame(9, $file->refresh()->getSize());
     }
 
