@@ -105,6 +105,9 @@ final class TempFile extends \SplFileInfo
      * Create temporary image file.
      *
      * @source https://github.com/laravel/framework/blob/183d38f18c0ea9fe13b6d10a6d8360be881d096c/src/Illuminate/Http/Testing/FileFactory.php#L68
+     *
+     * @param int<1, max> $width
+     * @param int<1, max> $height
      */
     public static function image(int $width = 10, int $height = 10, string $type = 'jpg', ?string $name = null): self
     {
